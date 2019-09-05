@@ -47,6 +47,7 @@ export default {
                 type:"success",
                 message: "退出成功"
             })
+            this.$router.push('user/login')
     }
   },
   mounted() {
