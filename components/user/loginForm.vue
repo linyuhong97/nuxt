@@ -64,7 +64,7 @@ export default {
                         method:'POST',
                         data:this.loginForm
                     }).then(res=>{
-                        console.log(res);
+                        this.$store.commit('user/setUserInfo',res.data)
                     })
                 }else {
                     this.$message.error('请填写您的用户名和密码')

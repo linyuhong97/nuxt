@@ -10,15 +10,49 @@
         <nuxt-link to="/hotel">酒店</nuxt-link>
         <nuxt-link to="/air">国内机票</nuxt-link>
       </el-row>
-      <div class="login">
-        <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
-      </div>
+
+      <!-- 登录/用户信息 -->
+      <el-row type="flex" align="middle">
+        <div v-if="$store.state.user.userInfo.token">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <img
+                :src="`${$axios.defaults.baseURL}${$store.state.user.userInfo.user.defaultAvatar}`"
+              />
+              {{ $store.state.user.userInfo.user.nickname }}
+              <i
+                class="el-icon-arrow-down el-icon--right"
+              ></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item @click.native="handleLogout">退出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        <div v-else>
+          <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
+        </div>
+      </el-row>
     </el-row>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    handleLogout() {
+      this.$store.commit("user/clearUserInfo");
+            this.$message({
+                type:"success",
+                message: "退出成功"
+            })
+    }
+  },
+  mounted() {
+    console.log(this.$store.state.user.userInfo.user);
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -64,7 +98,17 @@ export default {};
     }
   }
 }
-
+.el-dropdown-link img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  vertical-align: middle;
+  box-sizing: border-box;
+  border:2px solid #fff;
+  &:hover{
+    border:2px solid #409eff;
+  }
+}
 nuxt-link {
   padding: 0 10px;
 }

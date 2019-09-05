@@ -5,7 +5,7 @@ export default {
   ** Headers of the page
   */
   head: {
-    title: '世界上最大的路由网站',
+    title: '世界上最大的旅游网站',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -32,7 +32,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    { src: '@/plugins/localStorage',ssr:false }
   ],
   /*
   ** Nuxt.js dev-modules

@@ -13,7 +13,7 @@
                 </el-row>
 
                 <LoginForm v-if="currentIndex === 0" />
-                
+                <RegisterForm v-if="currentIndex === 1" />
             </div>
         </el-row>
     </div>
@@ -21,6 +21,7 @@
 
 <script>
 import LoginForm from '@/components/user/loginForm';
+import RegisterForm from '@/components/user/registerForm';
 export default {
     data(){
         return {
@@ -33,7 +34,7 @@ export default {
        }
     },
     components:{
-      LoginForm
+      LoginForm,RegisterForm
     }
 }
 </script>
