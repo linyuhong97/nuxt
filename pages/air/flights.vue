@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <FlightsFilters :data="cacheData" @changeDataList="changeDataList" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -26,9 +26,7 @@
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside">
-        <!-- 侧边栏组件 -->
-      </div>
+      <FlightsAside />
     </el-row>
   </section>
 </template>
@@ -36,12 +34,22 @@
 <script>
 import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
-import FlightsItem from "@/components/air/FlightsItem";
+import FlightsItem from "@/components/air/flightsItem";
+import FlightsFilters from "@/components/air/flightsFilters";
+import FlightsAside from "@/components/air/flightsAside";
 
 export default {
   data() {
     return {
-      flightsData: {},
+      // 定义一个不变的数据去储存拿到的数据列表
+      cacheData: {
+        info: {},
+        options: {}
+      },
+      flightsData: {
+        info: {},
+        options: {}
+      },
       dataList: [],
       pageNum: 1,
       pageSize: 5,
@@ -49,6 +57,26 @@ export default {
     };
   },
   methods: {
+    getData() {
+      this.$axios({
+        url: "/airs",
+        params: this.$route.query
+      }).then(res => {
+        console.log(res.data);
+
+        this.flightsData = res.data;
+        this.cacheData = { ...res.data };
+        //   this.dataList = res.data.flights;
+        this.setDataList();
+        this.total = res.data.total;
+      });
+    },
+    changeDataList(arr) {
+      this.flightsData.flights = arr;
+      this.total = arr.length;
+      this.pageNum = 1;
+      this.setDataList();
+    },
     setDataList() {
       this.dataList = this.flightsData.flights.slice(
         (this.pageNum - 1) * this.pageSize,
@@ -56,30 +84,27 @@ export default {
       );
     },
     handleSizeChange(val) {
-      this.pageSize = val
+      this.pageSize = val;
       this.setDataList();
     },
     handleCurrentChange(val) {
-      this.pageNum = val 
+      this.pageNum = val;
       this.setDataList();
     }
   },
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFilters,
+    FlightsAside
+  },
+  watch: {
+    $route() {
+      this.getData()
+    }
   },
   mounted() {
-    this.$axios({
-      url: "/airs",
-      params: this.$route.query
-    }).then(res => {
-      console.log(res);
-
-      this.flightsData = res.data;
-      //   this.dataList = res.data.flights;
-      this.setDataList();
-      this.total = res.data.total;
-    });
+    this.getData()
   }
 };
 </script>

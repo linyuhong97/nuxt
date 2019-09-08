@@ -166,6 +166,14 @@ export default {
         this.$alert("出发日期不能为空", "提示");
         return;
       }
+      // // 本地存储搜索记录
+      let arr = JSON.parse(this.$store.state.history.myHistory) || []
+      arr.push(this.form)
+      // localStorage.setItem('my_history',JSON.stringify(arr))
+
+      // vuex实现历史纪录展示
+      this.$store.commit('history/setHistory',JSON.stringify(arr))
+      
       this.$router.push({
         path: "/air/flights",
         // url携带的参数
