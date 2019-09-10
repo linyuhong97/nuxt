@@ -5,23 +5,25 @@
             <OrderForm :data="dataInfo"/>
 
             <!-- 侧边栏 -->
-            <div class="aside">
-                          
-            </div>
+            <OrderAside :data="dataInfo"/>
         </el-row>
     </div>
 </template>
 
 <script>
 import OrderForm from '@/components/air/orderForm'
+import OrderAside from '@/components/air/orderAside'
 export default {
     data(){
         return {
-            dataInfo:{}
+            dataInfo:{
+                seat_infos:{}
+            }
         }
     },
     components:{
-        OrderForm
+        OrderForm,
+        OrderAside
     },
     mounted(){
         const {id,seat_xid} = this.$route.query
@@ -30,6 +32,8 @@ export default {
             params:{seat_xid}
         }).then(res => {
             this.dataInfo = res.data
+            console.log(this.dataInfo);
+            
         })
     }
 }

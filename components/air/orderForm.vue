@@ -60,6 +60,7 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <span v-show="false">{{allPrice}}</span>
   </div>
 </template>
 
@@ -139,6 +140,28 @@ export default {
       const {id,seat_xid} = this.$route.query
       this.userInfo.air = id
       this.userInfo.seat_xid = seat_xid
+
+      // 表单验证
+      if(!this.userInfo.users[0].username || !this.userInfo.users[0].id){
+        this.$message.error('乘机人不能为空')
+        return;
+      }
+
+      if(!this.userInfo.contactName){
+        this.$message.error('联系人不能为空')
+        return;
+      }
+
+      if(!this.userInfo.contactPhone){
+        this.$message.error('联系电话不能为空')
+        return;
+      }
+
+      if(!this.userInfo.captcha){
+        this.$message.error('验证码不能为空')
+        return;
+      }
+
       this.$axios({
         url:'/airorders',
         method:'POST',
@@ -156,6 +179,17 @@ export default {
         
       })
       
+    }
+  },
+  computed:{
+    allPrice(){
+      let price = this.data.seat_infos.org_settle_price
+      price += this.data.airport_tax_audlet
+      price += this.userInfo.insurances.length * 30
+      price *= this.userInfo.users.length
+      this.$store.commit('air/setAllPrice',price)
+      this.$store.commit('air/setUserNumber',this.userInfo.users.length)
+      return price
     }
   }
 };

@@ -65,10 +65,7 @@ export default {
                         data:this.loginForm
                     }).then(res=>{
                         this.$store.commit('user/setUserInfo',res.data)
-                        this.$message.success('登录成功，正在跳转到主页，请稍候')
-                        setTimeout(() => {
-                            this.$router.push('/')
-                        }, 1000);
+                        this.$router.back()
                     })
                 }else {
                     this.$message.error('请填写您的用户名和密码')
