@@ -98,7 +98,7 @@ export default {
         data.forEach(e => {
           e.value = e.name.replace("市", "");
         });
-        if (this.form.destCdepartCityity === data[0].value) {
+        if (this.form.departCity === data[0].value) {
         this.form.departCity = data[0].value;
         this.form.departCode = data[0].sort;
         }
@@ -167,12 +167,14 @@ export default {
         return;
       }
       // // 本地存储搜索记录
-      let arr = JSON.parse(this.$store.state.history.myHistory) || []
-      arr.push(this.form)
+      // let arr = JSON.parse(this.$store.state.history.myHistory) || []
+      // arr.push(this.form)
       // localStorage.setItem('my_history',JSON.stringify(arr))
 
       // vuex实现历史纪录展示
-      this.$store.commit('history/setHistory',JSON.stringify(arr))
+      let arr =  this.$store.state.history.myHistory.arr || []
+      arr.push(this.form)
+      this.$store.commit('history/setHistory',arr)
       
       this.$router.push({
         path: "/air/flights",

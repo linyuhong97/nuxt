@@ -47,12 +47,12 @@ export default {
   },
   mounted() {
     // this.historyList = JSON.parse(localStorage.getItem("my_history")) || [];
-    
-    setTimeout(()=>{
-        this.historyList = JSON.parse(this.$store.state.history.myHistory) || []
-    },10)
-    
-    
+
+    setTimeout(() => {
+        this.historyList = this.$store.state.history.myHistory.arr || [];
+        console.log(this.$store.state.history.myHistory.arr);
+        
+    }, 1000);
   }
 };
 </script>
