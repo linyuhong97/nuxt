@@ -14,10 +14,10 @@ export default ( {$axios,redirect} ) => {
             Message.error(message)
         }
 
-        if(statusCode === 401 || statusCode === 401){
-            Message.error('暂未登录，请先登录！')
-            redirect('/user/login')
-        }
+        // if(statusCode === 401 || statusCode === 401){
+        //     Message.error('暂未登录，请先登录！')
+        //     redirect('/user/login')
+        // }
 
     })
 }

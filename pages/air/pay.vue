@@ -28,23 +28,56 @@ import QRCode from "qrcode";
 export default {
   data() {
     return {
+      dataInfo: {},
+      timer: null
     };
   },
+  methods: {
+    isPay() {
+      this.$axios({
+        url: "/airorders/checkpay",
+        headers: {
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        },
+        method: "POST",
+        data: {
+          id: this.$route.query.id,
+          nonce_str: this.dataInfo.price,
+          out_trade_no: this.dataInfo.orderNo
+        }
+      }).then(res => {
+        if (res.data.trade_state === "SUCCESS") {
+          clearInterval(this.timer);
+          this.timer = null;
+          this.$alert('支付成功','提示')
+        }
+      });
+    }
+  },
+  destroyed() {
+    clearInterval(this.timer);
+    this.timer = null;
+  },
   mounted() {
-    this.$axios({
-      url: "/airorders/" + this.$route.query.id,
-      headers: {
-        Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
-      }
-    }).then(res => {
-      console.log(res.data.payInfo.code_url);
-      const {code_url} = res.data.payInfo;
-      const canvas = document.getElementById('qrcode-stage')
-      QRCode.toCanvas(canvas, code_url, {
-        width:200
-      })
-    });
-    
+    setTimeout(() => {
+      this.$axios({
+        url: "/airorders/" + this.$route.query.id,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        }
+      }).then(res => {
+        console.log(res.data, 11111111111);
+        this.dataInfo = res.data;
+        const { code_url } = res.data.payInfo;
+        const canvas = document.getElementById("qrcode-stage");
+        QRCode.toCanvas(canvas, code_url, {
+          width: 200
+        });
+        this.timer = setInterval(() => {
+          this.isPay();
+        }, 3000);
+      });
+    }, 10);
   }
 };
 </script>
